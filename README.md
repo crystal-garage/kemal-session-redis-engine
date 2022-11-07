@@ -25,7 +25,10 @@ require "kemal-session-redis"
 Kemal::Session.config do |config|
   config.cookie_name = "redis_test"
   config.secret = "a_secret"
-  config.engine = Kemal::Session::RedisEngine.new("redis://localhost:6379/0")
+  config.engine = Kemal::Session::RedisEngine.new(
+    "redis://localhost:6379/0?initial_pool_size=1&max_pool_size=10&checkout_timeout=10&retry_attempts=2&retry_delay=0.5&max_idle_pool_size=50",
+    key_prefix: "my_app:session:"
+  )
   config.timeout = Time::Span.new(1, 0, 0)
 end
 
@@ -42,19 +45,10 @@ Kemal.run
 
 The engine comes with a number of configuration options:
 
-| Option | Description |
-| ------ | ----------- |
-| host   | where your redis instance lives |
-| port   | assigned port for redis instance |
-| unixsocket | Use a socket instead of host/port. This will override host / port settings |
-| database | which database to use when after connecting to redis. defaults to 0 |
-| capacity | how many connections the connection pool should create. defaults to 20 |
-| timeout | how long until a connection is considered long-running. defaults to 2.0 (seconds) |
+| Option     | Description                                                                                    |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| redis_url  | where your redis instance lives. defaults to `redis://localhost:6379/0`                        |
 | key_prefix | when saving sessions to redis, how should the keys be namespaced. defaults to `kemal:session:` |
-
-When the Redis engine is instantiated,
-`RedisEngine` will create a connection pool for you. The pool will have 20 connections
-and a timeout of 2 seconds.
 
 If no options are passed the `RedisEngine` will try to connect to a Redis using
 default settings.
