@@ -44,20 +44,12 @@ module Kemal
         })
       end
 
-      @redis : Redis::PooledClient
+      @redis : Redis::Client
       @cache : StorageInstance
       @cached_session_id : String
 
-      def initialize(host = "localhost", port = 6379, password = nil, database = 0, capacity = 20, timeout = 2.0, unixsocket = nil, key_prefix = "kemal:session:")
-        @redis = Redis::PooledClient.new(
-          host: host,
-          port: port,
-          database: database,
-          unixsocket: unixsocket,
-          password: password,
-          pool_size: capacity,
-          pool_timeout: timeout
-        )
+      def initialize(redis_url = "redis://localhost:6379/0", key_prefix = "kemal:session:")
+        @redis = Redis::Client.new(URI.parse(redis_url))
 
         @cache = Kemal::Session::RedisEngine::StorageInstance.new
         @key_prefix = key_prefix
@@ -126,11 +118,13 @@ module Kemal
       end
 
       def destroy_all_sessions
-        cursor = 0
+        cursor = "0"
 
         loop do
-          cursor, keys = @redis.scan(cursor, "#{@key_prefix}*")
-          keys = keys.as(Array(Redis::RedisValue)).map(&.to_s)
+          cursor, keys = @redis.scan(cursor, "#{@key_prefix}*").as(Array(Redis::Value))
+
+          cursor = cursor.as(String)
+          keys = keys.as(Array(Redis::Value)).map(&.to_s)
 
           keys.each { |key| @redis.del(key) }
 
@@ -149,11 +143,13 @@ module Kemal
       end
 
       def each_session
-        cursor = 0
+        cursor = "0"
 
         loop do
-          cursor, keys = @redis.scan(cursor, "#{@key_prefix}*")
-          keys = keys.as(Array(Redis::RedisValue)).map(&.to_s)
+          cursor, keys = @redis.scan(cursor, "#{@key_prefix}*").as(Array(Redis::Value))
+
+          cursor = cursor.as(String)
+          keys = keys.as(Array(Redis::Value)).map(&.to_s)
 
           keys.each do |key|
             yield Kemal::Session.new(parse_session_id(key.as(String)))

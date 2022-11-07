@@ -1,8 +1,8 @@
 # kemal-session-redis
 
-[![CI](https://github.com/neovintage/kemal-session-redis/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/neovintage/kemal-session-redis/actions/workflows/ci.yml)
+[![CI](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml)
 
-Redis session store for [kemal-session](https://github.com/kemalcr/kemal-session).
+Redis session store for [kemal-session](https://github.com/kemalcr/kemal-session) implemented with [jgaskins/redis](https://github.com/jgaskins/redis) client.
 
 ## Installation
 
@@ -11,7 +11,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   kemal-session-redis:
-    github: neovintage/kemal-session-redis
+    github: crystal-garage/kemal-session-redis
     version: 1.0.1
 ```
 
@@ -86,7 +86,7 @@ specs.
 
 ## Contributing
 
-1. Fork it ( https://github.com/neovintage/kemal-session-redis/fork )
+1. Fork it ( https://github.com/crystal-garage/kemal-session-redis/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
