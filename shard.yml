@@ -1,4 +1,4 @@
-name: kemal-session-redis
+name: kemal-session-redis-engine
 version: 1.0.1
 
 dependencies:

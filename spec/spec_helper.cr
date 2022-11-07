@@ -1,6 +1,6 @@
 require "spec"
 require "io"
-require "../src/kemal-session-redis"
+require "../src/kemal-session-redis-engine"
 
 Kemal::Session.config.secret = "super-awesome-secret"
 Kemal::Session.config.engine = Kemal::Session::RedisEngine.new

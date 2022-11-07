@@ -1,6 +1,6 @@
-# kemal-session-redis
+# kemal-session-redis-engine
 
-[![CI](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml)
+[![CI](https://github.com/crystal-garage/kemal-session-redis-engine/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/crystal-garage/kemal-session-redis-engine/actions/workflows/ci.yml)
 
 Redis session store for [kemal-session](https://github.com/kemalcr/kemal-session) implemented with [jgaskins/redis](https://github.com/jgaskins/redis) client.
 
@@ -10,8 +10,8 @@ Add this to your application's `shard.yml`:
 
 ```yaml
 dependencies:
-  kemal-session-redis:
-    github: crystal-garage/kemal-session-redis
+  kemal-session-redis-engine:
+    github: crystal-garage/kemal-session-redis-engine
     version: 1.0.1
 ```
 
@@ -20,7 +20,7 @@ dependencies:
 ```crystal
 require "kemal"
 require "kemal-session"
-require "kemal-session-redis"
+require "kemal-session-redis-engine"
 
 Kemal::Session.config do |config|
   config.cookie_name = "redis_test"
@@ -80,7 +80,7 @@ specs.
 
 ## Contributing
 
-1. Fork it ( https://github.com/crystal-garage/kemal-session-redis/fork )
+1. Fork it ( https://github.com/crystal-garage/kemal-session-redis-engine/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
