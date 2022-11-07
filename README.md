@@ -1,6 +1,6 @@
 # kemal-session-redis
 
-[![CI](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml)
+[![CI](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/crystal-garage/kemal-session-redis/actions/workflows/ci.yml)
 
 Redis session store for [kemal-session](https://github.com/kemalcr/kemal-session) implemented with [jgaskins/redis](https://github.com/jgaskins/redis) client.
 
