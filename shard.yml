@@ -1,10 +1,10 @@
 name: kemal-session-redis-engine
-version: 1.0.1
+version: 1.1.0
 
 dependencies:
   kemal-session:
     github: kemalcr/kemal-session
-    version: ~> 1.0
+    version: ~> 1.0.0
   redis:
     github: jgaskins/redis
     version: ~> 0.6.1

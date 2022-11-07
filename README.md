@@ -12,7 +12,6 @@ Add this to your application's `shard.yml`:
 dependencies:
   kemal-session-redis-engine:
     github: crystal-garage/kemal-session-redis-engine
-    version: 1.0.1
 ```
 
 ## Usage
@@ -88,6 +87,7 @@ specs.
 
 ## Contributors
 
+- [[mamantoha](https://github.com/mamantoha)] Anton Maminov - maintainer
 - [[neovintage](https://github.com/neovintage)] Rimas Silkaitis - creator, maintainer
 - [[crisward](https://github.com/crisward)] Cris Ward
 - [[fdocr](https://github.com/fdocr)] Fernando Valverde
