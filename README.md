@@ -25,7 +25,7 @@ require "kemal-session-redis"
 Kemal::Session.config do |config|
   config.cookie_name = "redis_test"
   config.secret = "a_secret"
-  config.engine = Kemal::Session::RedisEngine.new(host: "localhost", port: 1234)
+  config.engine = Kemal::Session::RedisEngine.new("redis://localhost:6379/0")
   config.timeout = Time::Span.new(1, 0, 0)
 end
 
