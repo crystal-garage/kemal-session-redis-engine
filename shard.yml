@@ -4,10 +4,10 @@ version: 1.2.0
 dependencies:
   kemal-session:
     github: kemalcr/kemal-session
-    version: ~> 1.0.0
+    version: ">= 1.0.0"
   redis:
     github: jgaskins/redis
-    version: ~> 0.7.0
+    version: ">= 0.7.0"
 
 authors:
   - Rimas Silkaitis <neovintage@gmail.com>
