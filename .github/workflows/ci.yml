@@ -37,7 +37,7 @@ jobs:
         uses: shogo82148/actions-setup-redis@v1
         id: main_redis
         with:
-          redis-version: 6.2
+          redis-version: 7.2
       - run: redis-cli info | grep version
       - name: Check out repository code
         uses: actions/checkout@v4
