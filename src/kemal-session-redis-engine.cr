@@ -142,7 +142,7 @@ module Kemal
         arr
       end
 
-      def each_session
+      def each_session(&)
         cursor = "0"
 
         loop do
