@@ -82,7 +82,7 @@ module Kemal
           @redis.set(
             prefix_session(session_id),
             @cache.to_json,
-            ex: Kemal::Session.config.timeout.total_seconds.to_i
+            ex: Kemal::Session.config.timeout
           )
         else
           @cache = StorageInstance.from_json(value)
@@ -95,7 +95,7 @@ module Kemal
         @redis.set(
           prefix_session(@cached_session_id),
           @cache.to_json,
-          ex: Kemal::Session.config.timeout.total_seconds.to_i
+          ex: Kemal::Session.config.timeout
         )
       end
 
