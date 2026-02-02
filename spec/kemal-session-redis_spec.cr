@@ -30,7 +30,7 @@ describe "Kemal::Session::RedisEngine" do
     it "can retrieve a saved value" do
       session = Kemal::Session.new(create_context(SESSION_ID))
       session.bool("bool", true)
-      session.bool("bool").should eq true
+      session.bool("bool").should be_true
     end
   end
 
@@ -157,7 +157,7 @@ describe "Kemal::Session::RedisEngine" do
     it "should iterate over all sessions" do
       5.times { Kemal::Session.new(create_context(Random::Secure.hex)) }
       count = 0
-      Kemal::Session.each do |session|
+      Kemal::Session.each do |_|
         count = count + 1
       end
       count.should eq(5)

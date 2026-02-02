@@ -26,7 +26,7 @@ def create_context(session_id : String)
   end
 
   request = HTTP::Request.new("GET", "/", headers)
-  return HTTP::Server::Context.new(request, response)
+  HTTP::Server::Context.new(request, response)
 end
 
 class UserJsonSerializer
