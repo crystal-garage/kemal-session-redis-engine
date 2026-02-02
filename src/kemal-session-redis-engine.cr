@@ -11,31 +11,31 @@ module Kemal
 
         macro define_storage(vars)
           {% for name, type in vars %}
-            @[JSON::Field(key: {{name.id}})]
-            getter {{name.id}}s : Hash(String, {{type}})
+            @[JSON::Field(key: {{ name.id }})]
+            getter {{ name.id }}s : Hash(String, {{ type }})
 
-            def {{name.id}}(k : String) : {{type}}
-              return @{{name.id}}s[k]
+            def {{ name.id }}(k : String) : {{ type }}
+              return @{{ name.id }}s[k]
             end
 
-            def {{name.id}}?(k : String) : {{type}}?
-              return @{{name.id}}s[k]?
+            def {{ name.id }}?(k : String) : {{ type }}?
+              return @{{ name.id }}s[k]?
             end
 
-            def {{name.id}}(k : String, v : {{type}})
-              @{{name.id}}s[k] = v
+            def {{ name.id }}(k : String, v : {{ type }})
+              @{{ name.id }}s[k] = v
             end
 
-            def delete_{{name.id}}(k : String)
-              if @{{name.id}}s[k]?
-                @{{name.id}}s.delete(k)
+            def delete_{{ name.id }}(k : String)
+              if @{{ name.id }}s[k]?
+                @{{ name.id }}s.delete(k)
               end
             end
           {% end %}
 
           def initialize
             {% for name, type in vars %}
-              @{{name.id}}s = Hash(String, {{type}}).new
+              @{{ name.id }}s = Hash(String, {{ type }}).new
             {% end %}
           end
         end
@@ -167,30 +167,30 @@ module Kemal
 
       macro define_delegators(vars)
         {% for name, type in vars %}
-          def {{name.id}}(session_id : String, k : String) : {{type}}
+          def {{ name.id }}(session_id : String, k : String) : {{ type }}
             load_into_cache(session_id) unless is_in_cache?(session_id)
-            return @cache.{{name.id}}(k)
+            return @cache.{{ name.id }}(k)
           end
 
-          def {{name.id}}?(session_id : String, k : String) : {{type}}?
+          def {{ name.id }}?(session_id : String, k : String) : {{ type }}?
             load_into_cache(session_id) unless is_in_cache?(session_id)
-            return @cache.{{name.id}}?(k)
+            return @cache.{{ name.id }}?(k)
           end
 
-          def {{name.id}}(session_id : String, k : String, v : {{type}})
+          def {{ name.id }}(session_id : String, k : String, v : {{ type }})
             load_into_cache(session_id) unless is_in_cache?(session_id)
-            @cache.{{name.id}}(k, v)
+            @cache.{{ name.id }}(k, v)
             save_cache
           end
 
-          def {{name.id}}s(session_id : String) : Hash(String, {{type}})
+          def {{ name.id }}s(session_id : String) : Hash(String, {{ type }})
             load_into_cache(session_id) unless is_in_cache?(session_id)
-            return @cache.{{name.id}}s
+            return @cache.{{ name.id }}s
           end
 
-          def delete_{{name.id}}(session_id : String, k : String)
+          def delete_{{ name.id }}(session_id : String, k : String)
             load_into_cache(session_id) unless is_in_cache?(session_id)
-            @cache.delete_{{name.id}}(k)
+            @cache.delete_{{ name.id }}(k)
             save_cache
           end
         {% end %}
