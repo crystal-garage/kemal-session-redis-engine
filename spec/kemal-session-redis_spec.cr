@@ -84,7 +84,7 @@ describe "Kemal::Session::RedisEngine" do
 
   describe "#destroy" do
     it "should remove session from redis" do
-      session = Kemal::Session.new(create_context(SESSION_ID))
+      Kemal::Session.new(create_context(SESSION_ID))
       value = REDIS.get("kemal:session:#{SESSION_ID}")
       value.should_not be_nil
       Kemal::Session.destroy(SESSION_ID)
@@ -93,7 +93,7 @@ describe "Kemal::Session::RedisEngine" do
     end
 
     it "should succeed if session doesnt exist in redis" do
-      session = Kemal::Session.new(create_context(SESSION_ID))
+      Kemal::Session.new(create_context(SESSION_ID))
       value = REDIS.get("kemal:session:#{SESSION_ID}")
       value.should_not be_nil
       if value

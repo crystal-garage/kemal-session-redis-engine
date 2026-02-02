@@ -105,7 +105,7 @@ module Kemal
         )
       end
 
-      def is_in_cache?(session_id)
+      def in_cache?(session_id)
         session_id == @cached_session_id
       end
 
@@ -168,28 +168,28 @@ module Kemal
       macro define_delegators(vars)
         {% for name, type in vars %}
           def {{ name.id }}(session_id : String, k : String) : {{ type }}
-            load_into_cache(session_id) unless is_in_cache?(session_id)
+            load_into_cache(session_id) unless in_cache?(session_id)
             return @cache.{{ name.id }}(k)
           end
 
           def {{ name.id }}?(session_id : String, k : String) : {{ type }}?
-            load_into_cache(session_id) unless is_in_cache?(session_id)
+            load_into_cache(session_id) unless in_cache?(session_id)
             return @cache.{{ name.id }}?(k)
           end
 
           def {{ name.id }}(session_id : String, k : String, v : {{ type }})
-            load_into_cache(session_id) unless is_in_cache?(session_id)
+            load_into_cache(session_id) unless in_cache?(session_id)
             @cache.{{ name.id }}(k, v)
             save_cache
           end
 
           def {{ name.id }}s(session_id : String) : Hash(String, {{ type }})
-            load_into_cache(session_id) unless is_in_cache?(session_id)
+            load_into_cache(session_id) unless in_cache?(session_id)
             return @cache.{{ name.id }}s
           end
 
           def delete_{{ name.id }}(session_id : String, k : String)
-            load_into_cache(session_id) unless is_in_cache?(session_id)
+            load_into_cache(session_id) unless in_cache?(session_id)
             @cache.delete_{{ name.id }}(k)
             save_cache
           end
