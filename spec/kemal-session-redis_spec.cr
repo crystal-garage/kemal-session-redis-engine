@@ -18,6 +18,27 @@ describe "Kemal::Session::RedisEngine" do
       session = Kemal::Session.new(create_context(SESSION_ID))
       session.int("int", 12)
       session.int("int").should eq 12
+
+      value = REDIS.get("kemal:session:#{SESSION_ID}")
+      value.should eq("{\"int\":{\"int\":12},\"bigint\":{},\"string\":{},\"float\":{},\"bool\":{},\"object\":{}}")
+    end
+  end
+
+  describe ".delete_int" do
+    it "can delete a value" do
+      session = Kemal::Session.new(create_context(SESSION_ID))
+      session.int("bar", 12)
+      session.delete_int("bar")
+
+      value = REDIS.get("kemal:session:#{SESSION_ID}")
+      value.should eq("{\"int\":{},\"bigint\":{},\"string\":{},\"float\":{},\"bool\":{},\"object\":{}}")
+    end
+
+    it "shouldnt raise an error on empty key" do
+      session = Kemal::Session.new(create_context(SESSION_ID))
+      expect_not_raises do
+        session.delete_int("bar")
+      end
     end
   end
 
