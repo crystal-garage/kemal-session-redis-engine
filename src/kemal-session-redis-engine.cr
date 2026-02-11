@@ -38,6 +38,13 @@ module Kemal
               @{{ name.id }}s = Hash(String, {{ type }}).new
             {% end %}
           end
+
+          def empty? : Bool
+            {% for name, type in vars %}
+              return false unless @{{ name.id }}s.empty?
+            {% end %}
+            true
+          end
         end
 
         define_storage({
@@ -84,12 +91,6 @@ module Kemal
 
         if value.nil?
           @cache = StorageInstance.new
-
-          @redis.set(
-            prefix_session(session_id),
-            @cache.to_json,
-            ex: Kemal::Session.config.timeout
-          )
         else
           @cache = StorageInstance.from_json(value)
         end
@@ -98,11 +99,18 @@ module Kemal
       end
 
       def save_cache
-        @redis.set(
-          prefix_session(@cached_session_id),
-          @cache.to_json,
-          ex: Kemal::Session.config.timeout
-        )
+        return if @cached_session_id.empty?
+
+        # Delete empty sessions so read-only access does not create keys.
+        if @cache.empty?
+          @redis.del(prefix_session(@cached_session_id))
+        else
+          @redis.set(
+            prefix_session(@cached_session_id),
+            @cache.to_json,
+            ex: Kemal::Session.config.timeout
+          )
+        end
       end
 
       def in_cache?(session_id)
@@ -127,6 +135,7 @@ module Kemal
         cursor = "0"
 
         loop do
+          # Use SCAN to avoid blocking Redis with large keyspaces.
           cursor, keys = @redis.scan(cursor, "#{@key_prefix}*").as(Array(Redis::Value))
 
           cursor = cursor.as(String)
