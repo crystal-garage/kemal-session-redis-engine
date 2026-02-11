@@ -32,11 +32,11 @@ end
 macro expect_not_raises(file = __FILE__, line = __LINE__)
   %failed = false
   begin
-    {{yield}}
+    {{ yield }}
   rescue %ex
     %ex_to_s = %ex.to_s
     backtrace = %ex.backtrace.map { |f| "  # #{f}" }.join "\n"
-    fail "Expected no exception, got #<#{ %ex.class }: #{ %ex_to_s }> with backtrace:\n#{backtrace}", {{file}}, {{line}}
+    fail "Expected no exception, got #<#{ %ex.class }: #{ %ex_to_s }> with backtrace:\n#{backtrace}", {{ file }}, {{ line }}
   end
 end
 
