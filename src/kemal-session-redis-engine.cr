@@ -106,17 +106,10 @@ module Kemal
       def save_cache
         return if @cached_session_id.empty?
 
-        # Persist empty sessions only if they already exist in Redis; otherwise delete.
+        # Delete empty sessions so read-only access does not create keys.
         if @cache.empty?
-          if @cache_persisted
-            @redis.set(
-              prefix_session(@cached_session_id),
-              @cache.to_json,
-              ex: Kemal::Session.config.timeout
-            )
-          else
-            @redis.del(prefix_session(@cached_session_id))
-          end
+          @redis.del(prefix_session(@cached_session_id))
+          @cache_persisted = false
         else
           @redis.set(
             prefix_session(@cached_session_id),
@@ -133,11 +126,6 @@ module Kemal
 
       def create_session(session_id : String)
         load_into_cache(session_id)
-        return if @cache_persisted
-
-        # Force persistence for explicitly created sessions.
-        @cache_persisted = true
-        save_cache
       end
 
       def get_session(session_id : String) : Session?

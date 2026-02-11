@@ -22,6 +22,14 @@ describe "Kemal::Session::RedisEngine" do
       value = REDIS.get("kemal:session:#{SESSION_ID}")
       value.should eq("{\"int\":{\"int\":12},\"bigint\":{},\"string\":{},\"float\":{},\"bool\":{},\"object\":{}}")
     end
+
+    it "does not create a key on read-only access" do
+      session = Kemal::Session.new(create_context(SESSION_ID))
+      session.int?("missing").should be_nil
+
+      value = REDIS.get("kemal:session:#{SESSION_ID}")
+      value.should be_nil
+    end
   end
 
   describe ".delete_int" do
@@ -31,7 +39,7 @@ describe "Kemal::Session::RedisEngine" do
       session.delete_int("bar")
 
       value = REDIS.get("kemal:session:#{SESSION_ID}")
-      value.should eq("{\"int\":{},\"bigint\":{},\"string\":{},\"float\":{},\"bool\":{},\"object\":{}}")
+      value.should be_nil
     end
 
     it "shouldnt raise an error on empty key" do
@@ -95,6 +103,7 @@ describe "Kemal::Session::RedisEngine" do
   describe ".destroy" do
     it "should remove session from redis" do
       session = Kemal::Session.new(create_context(SESSION_ID))
+      session.string("foo", "bar")
       value = REDIS.get("kemal:session:#{SESSION_ID}")
       value.should_not be_nil
       session.destroy
@@ -105,7 +114,8 @@ describe "Kemal::Session::RedisEngine" do
 
   describe "#destroy" do
     it "should remove session from redis" do
-      Kemal::Session.new(create_context(SESSION_ID))
+      session = Kemal::Session.new(create_context(SESSION_ID))
+      session.string("foo", "bar")
       value = REDIS.get("kemal:session:#{SESSION_ID}")
       value.should_not be_nil
       Kemal::Session.destroy(SESSION_ID)
@@ -114,19 +124,21 @@ describe "Kemal::Session::RedisEngine" do
     end
 
     it "should succeed if session doesnt exist in redis" do
-      Kemal::Session.new(create_context(SESSION_ID))
       value = REDIS.get("kemal:session:#{SESSION_ID}")
-      value.should_not be_nil
-      if value
+      value.should be_nil
+      expect_not_raises do
         Kemal::Session.destroy(SESSION_ID)
-        Kemal::Session.get(SESSION_ID).should be_nil
       end
+      Kemal::Session.get(SESSION_ID).should be_nil
     end
   end
 
   describe "#destroy_all" do
     it "should remove all sessions in redis" do
-      5.times { Kemal::Session.new(create_context(Random::Secure.hex)) }
+      5.times do
+        session = Kemal::Session.new(create_context(Random::Secure.hex))
+        session.int("seed", 1)
+      end
       arr = Kemal::Session.all
       arr.size.should eq(5)
       Kemal::Session.destroy_all
@@ -137,6 +149,7 @@ describe "Kemal::Session::RedisEngine" do
   describe "#get" do
     it "should return a valid Kemal::Session" do
       session = Kemal::Session.new(create_context(SESSION_ID))
+      session.bool("flag", true)
       get_session = Kemal::Session.get(SESSION_ID)
       get_session.should_not be_nil
       if get_session
@@ -152,10 +165,10 @@ describe "Kemal::Session::RedisEngine" do
   end
 
   describe "#create" do
-    it "should build an empty session" do
+    it "should not persist an empty session" do
       Kemal::Session.config.engine.create_session(SESSION_ID)
       value = REDIS.get("kemal:session:#{SESSION_ID}")
-      value.should_not be_nil
+      value.should be_nil
     end
   end
 
@@ -167,7 +180,10 @@ describe "Kemal::Session::RedisEngine" do
     end
 
     it "should return an array of Kemal::Sessions" do
-      3.times { Kemal::Session.new(create_context(Random::Secure.hex)) }
+      3.times do
+        session = Kemal::Session.new(create_context(Random::Secure.hex))
+        session.int("seed", 1)
+      end
       arr = Kemal::Session.all
       arr.is_a?(Array).should be_true
       arr.size.should eq(3)
@@ -176,7 +192,10 @@ describe "Kemal::Session::RedisEngine" do
 
   describe "#each" do
     it "should iterate over all sessions" do
-      5.times { Kemal::Session.new(create_context(Random::Secure.hex)) }
+      5.times do
+        session = Kemal::Session.new(create_context(Random::Secure.hex))
+        session.int("seed", 1)
+      end
       count = 0
       Kemal::Session.each do |_|
         count = count + 1
