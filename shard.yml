@@ -1,17 +1,18 @@
 name: kemal-session-redis-engine
-version: 1.3.0
+version: 1.4.0
 
 dependencies:
   kemal:
     github: kemalcr/kemal
   kemal-session:
     github: kemalcr/kemal-session
-    version: ">= 1.0.0"
+    version: ">= 1.4.0"
   redis:
     github: jgaskins/redis
-    version: ">= 0.7.0"
+    version: ">= 0.13.0"
 
 authors:
   - Rimas Silkaitis <neovintage@gmail.com>
+  - Anton Maminov <anton.maminov@gmail.com>
 
 license: MIT
