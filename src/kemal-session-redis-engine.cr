@@ -89,13 +89,12 @@ module Kemal
         @cached_session_id = session_id
         value = @redis.get(prefix_session(session_id))
 
-        if value.nil?
-          @cache = StorageInstance.new
-        else
-          @cache = StorageInstance.from_json(value)
-        end
-
-        @cache
+        @cache =
+          if value.nil?
+            StorageInstance.new
+          else
+            StorageInstance.from_json(value)
+          end
       end
 
       def save_cache
