@@ -15,11 +15,11 @@ module Kemal
             getter {{ name.id }}s : Hash(String, {{ type }})
 
             def {{ name.id }}(k : String) : {{ type }}
-              return @{{ name.id }}s[k]
+              @{{ name.id }}s[k]
             end
 
             def {{ name.id }}?(k : String) : {{ type }}?
-              return @{{ name.id }}s[k]?
+              @{{ name.id }}s[k]?
             end
 
             def {{ name.id }}(k : String, v : {{ type }})
@@ -178,12 +178,14 @@ module Kemal
         {% for name, type in vars %}
           def {{ name.id }}(session_id : String, k : String) : {{ type }}
             load_or_init_cache(session_id) unless in_cache?(session_id)
-            return @cache.{{ name.id }}(k)
+
+            @cache.{{ name.id }}(k)
           end
 
           def {{ name.id }}?(session_id : String, k : String) : {{ type }}?
             load_or_init_cache(session_id) unless in_cache?(session_id)
-            return @cache.{{ name.id }}?(k)
+
+            @cache.{{ name.id }}?(k)
           end
 
           def {{ name.id }}(session_id : String, k : String, v : {{ type }})
@@ -194,7 +196,8 @@ module Kemal
 
           def {{ name.id }}s(session_id : String) : Hash(String, {{ type }})
             load_or_init_cache(session_id) unless in_cache?(session_id)
-            return @cache.{{ name.id }}s
+
+            @cache.{{ name.id }}s
           end
 
           def delete_{{ name.id }}(session_id : String, k : String)
