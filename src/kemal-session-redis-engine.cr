@@ -39,6 +39,7 @@ module Kemal
             {% end %}
           end
 
+          # Returns true only when all typed storage hashes are empty.
           def empty? : Bool
             {% for name, type in vars %}
               return false unless @{{ name.id }}s.empty?
