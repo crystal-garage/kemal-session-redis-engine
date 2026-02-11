@@ -85,7 +85,7 @@ module Kemal
         key.sub(@key_prefix, "")
       end
 
-      def load_into_cache(session_id)
+      def load_or_init_cache(session_id)
         @cached_session_id = session_id
         value = @redis.get(prefix_session(session_id))
 
@@ -118,7 +118,7 @@ module Kemal
       end
 
       def create_session(session_id : String)
-        load_into_cache(session_id)
+        load_or_init_cache(session_id)
       end
 
       def get_session(session_id : String) : Session?
@@ -177,28 +177,28 @@ module Kemal
       macro define_delegators(vars)
         {% for name, type in vars %}
           def {{ name.id }}(session_id : String, k : String) : {{ type }}
-            load_into_cache(session_id) unless in_cache?(session_id)
+            load_or_init_cache(session_id) unless in_cache?(session_id)
             return @cache.{{ name.id }}(k)
           end
 
           def {{ name.id }}?(session_id : String, k : String) : {{ type }}?
-            load_into_cache(session_id) unless in_cache?(session_id)
+            load_or_init_cache(session_id) unless in_cache?(session_id)
             return @cache.{{ name.id }}?(k)
           end
 
           def {{ name.id }}(session_id : String, k : String, v : {{ type }})
-            load_into_cache(session_id) unless in_cache?(session_id)
+            load_or_init_cache(session_id) unless in_cache?(session_id)
             @cache.{{ name.id }}(k, v)
             save_cache
           end
 
           def {{ name.id }}s(session_id : String) : Hash(String, {{ type }})
-            load_into_cache(session_id) unless in_cache?(session_id)
+            load_or_init_cache(session_id) unless in_cache?(session_id)
             return @cache.{{ name.id }}s
           end
 
           def delete_{{ name.id }}(session_id : String, k : String)
-            load_into_cache(session_id) unless in_cache?(session_id)
+            load_or_init_cache(session_id) unless in_cache?(session_id)
             @cache.delete_{{ name.id }}(k)
             save_cache
           end
