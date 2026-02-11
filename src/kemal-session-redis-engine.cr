@@ -60,7 +60,6 @@ module Kemal
       @redis : Redis::Client
       @cache : StorageInstance
       @cached_session_id : String
-      @cache_persisted : Bool
 
       def initialize(redis_url = "redis://localhost:6379/0", key_prefix = "kemal:session:")
         @redis = Redis::Client.new(URI.parse(redis_url))
@@ -68,7 +67,6 @@ module Kemal
         @cache = Kemal::Session::RedisEngine::StorageInstance.new
         @key_prefix = key_prefix
         @cached_session_id = ""
-        @cache_persisted = false
       end
 
       def run_gc
@@ -93,11 +91,8 @@ module Kemal
 
         if value.nil?
           @cache = StorageInstance.new
-          # Track whether this session already exists in Redis.
-          @cache_persisted = false
         else
           @cache = StorageInstance.from_json(value)
-          @cache_persisted = true
         end
 
         @cache
@@ -109,14 +104,12 @@ module Kemal
         # Delete empty sessions so read-only access does not create keys.
         if @cache.empty?
           @redis.del(prefix_session(@cached_session_id))
-          @cache_persisted = false
         else
           @redis.set(
             prefix_session(@cached_session_id),
             @cache.to_json,
             ex: Kemal::Session.config.timeout
           )
-          @cache_persisted = true
         end
       end
 
